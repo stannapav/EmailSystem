@@ -1,6 +1,7 @@
 package com.stannapav.emailsystem.db.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -28,12 +30,6 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        this.createdOn = LocalDateTime.now();
-    }
-
-    public User(String username, String email){
-        this.username = username;
-        this.email = email;
         this.createdOn = LocalDateTime.now();
     }
 }
