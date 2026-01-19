@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    List<User> findAllByOrderByCreatedOnDesc();
-
     Page<User> findAllByOrderByCreatedOnDesc(Pageable pageable);
 
     Optional<User> findByUsername(String username);

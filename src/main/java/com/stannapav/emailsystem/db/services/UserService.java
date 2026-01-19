@@ -41,14 +41,6 @@ public class UserService {
         return mapper.map(user, UserResponseDTO.class);
     }
 
-    public List<UserResponseDTO> getUsers(){
-        List<User> users = userRepository.findAllByOrderByCreatedOnDesc();
-
-        return users.stream()
-                .map(user -> mapper.map(user, UserResponseDTO.class))
-                .collect(Collectors.toList());
-    }
-
     public Page<UserResponseDTO> getUsersPageable(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<User> userPage = userRepository.findAllByOrderByCreatedOnDesc(pageable);
