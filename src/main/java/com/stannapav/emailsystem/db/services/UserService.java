@@ -13,9 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,25 +47,19 @@ public class UserService {
     }
 
 /// CREATE || POST
-    public void createUser(UserDTO userDTO){
-        if (userDTO.getUsername() == null || userDTO.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username is required");
-        }
-
-        if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-
+    public UserResponseDTO createUser(UserDTO userDTO){
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("This email is already being used");
         }
 
         User user = mapper.map(userDTO, User.class);
         userRepository.save(user);
+
+        return mapper.map(user, UserResponseDTO.class);
     }
 
 /// UPDATE || PUT
-    public void updateUser(Integer id, UserDTO userDTO){
+    public UserResponseDTO updateUser(Integer id, UserDTO userDTO){
         User updateUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -85,6 +77,8 @@ public class UserService {
         }
 
         userRepository.save(updateUser);
+
+        return mapper.map(updateUser, UserResponseDTO.class);
     }
 
 /// DELETE

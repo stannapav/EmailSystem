@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserResponseDTO {
+    private Integer id;
+
     @NotBlank(message = "Username can't be empty")
     private String username;
 
