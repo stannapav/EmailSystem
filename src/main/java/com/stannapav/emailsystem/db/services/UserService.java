@@ -1,6 +1,7 @@
 package com.stannapav.emailsystem.db.services;
 
 import com.stannapav.emailsystem.db.dtos.UserDTO;
+import com.stannapav.emailsystem.db.dtos.UserResponseDTO;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,33 +27,33 @@ public class UserService {
     private UserRepository userRepository;
 
 /// GET
-    public UserDTO getUserByUsername(String username){
+    public UserResponseDTO getUserByUsername(String username){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return mapper.map(user, UserDTO.class);
+        return mapper.map(user, UserResponseDTO.class);
     }
 
-    public UserDTO getUserByEmail(String email){
+    public UserResponseDTO getUserByEmail(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return mapper.map(user, UserDTO.class);
+        return mapper.map(user, UserResponseDTO.class);
     }
 
-    public List<UserDTO> getUsers(){
+    public List<UserResponseDTO> getUsers(){
         List<User> users = userRepository.findAllByOrderByCreatedOnDesc();
 
         return users.stream()
-                .map(user -> mapper.map(user, UserDTO.class))
+                .map(user -> mapper.map(user, UserResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public Page<UserDTO> getUsersPageable(int page, int size){
+    public Page<UserResponseDTO> getUsersPageable(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<User> userPage = userRepository.findAllByOrderByCreatedOnDesc(pageable);
 
-        return userPage.map(user -> mapper.map(user, UserDTO.class));
+        return userPage.map(user -> mapper.map(user, UserResponseDTO.class));
     }
 
 /// CREATE || POST
