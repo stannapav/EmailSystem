@@ -3,7 +3,6 @@ package com.stannapav.emailsystem.controllers;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.services.MailService;
 import com.stannapav.emailsystem.db.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
