@@ -1,7 +1,6 @@
 package com.stannapav.emailsystem.db.services;
 
 import com.stannapav.emailsystem.db.dtos.UserDTO;
-import com.stannapav.emailsystem.db.dtos.UserResponseDTO;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,29 +24,28 @@ public class UserService {
     private UserRepository userRepository;
 
 /// GET
-    public UserResponseDTO getUserByUsername(String username){
-        User user = userRepository.findByUsername(username)
+    public User getUserById(Integer userId){
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        return mapper.map(user, UserResponseDTO.class);
     }
 
-    public UserResponseDTO getUserByEmail(String email){
-        User user = userRepository.findByEmail(email)
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        return mapper.map(user, UserResponseDTO.class);
     }
 
-    public Page<UserResponseDTO> getUsersPageable(int page, int size){
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    public Page<User> getUsersPageable(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> userPage = userRepository.findAllByOrderByCreatedOnDesc(pageable);
-
-        return userPage.map(user -> mapper.map(user, UserResponseDTO.class));
+        return userRepository.findAllByOrderByCreatedOnDesc(pageable);
     }
 
 /// CREATE || POST
-    public UserResponseDTO createUser(UserDTO userDTO){
+    public User createUser(UserDTO userDTO){
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("This email is already being used");
         }
@@ -55,11 +53,11 @@ public class UserService {
         User user = mapper.map(userDTO, User.class);
         userRepository.save(user);
 
-        return mapper.map(user, UserResponseDTO.class);
+        return user;
     }
 
 /// UPDATE || PUT
-    public UserResponseDTO updateUser(Integer id, UserDTO userDTO){
+    public User updateUser(Integer id, UserDTO userDTO){
         User updateUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -78,7 +76,7 @@ public class UserService {
 
         userRepository.save(updateUser);
 
-        return mapper.map(updateUser, UserResponseDTO.class);
+        return updateUser;
     }
 
 /// DELETE

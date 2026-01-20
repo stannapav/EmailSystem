@@ -1,7 +1,7 @@
 package com.stannapav.emailsystem.controllers;
 
 import com.stannapav.emailsystem.db.dtos.UserDTO;
-import com.stannapav.emailsystem.db.dtos.UserResponseDTO;
+import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/username")
-    public ResponseEntity<UserResponseDTO> getUserByUsername(@RequestParam @NotBlank String username) {
+    public ResponseEntity<User> getUserByUsername(@RequestParam @NotBlank String username) {
         try {
             return ResponseEntity.ok(userService.getUserByUsername(username));
         } catch (EntityNotFoundException e){
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
-    public ResponseEntity<UserResponseDTO> getUserByEmail(@RequestParam @NotBlank String email) {
+    public ResponseEntity<User> getUserByEmail(@RequestParam @NotBlank String email) {
         try {
             return ResponseEntity.ok(userService.getUserByEmail(email));
         } catch (EntityNotFoundException e){
@@ -38,16 +38,16 @@ public class UserController {
     }
 
     @GetMapping
-    public Page<UserResponseDTO> getUsers(
+    public Page<User> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size ) {
         return userService.getUsersPageable(page, size);
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
         try {
-            UserResponseDTO createdUser = userService.createUser(userDTO);
+            User createdUser = userService.createUser(userDTO);
             URI location = URI.create("/api/users/" + createdUser.getId());
 
             return ResponseEntity
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> updateUser(
+    public ResponseEntity<User> updateUser(
             @PathVariable Integer userId,
             @Valid @RequestBody UserDTO userDTO ) {
         try {
