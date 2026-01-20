@@ -4,6 +4,7 @@ import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.exceptions.MailSendingException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,8 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
-    public void sendUserMail(User user) {
+    @Async("mailExecutor")
+    public void sendUserMailAsync(User user) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(user.getEmail());

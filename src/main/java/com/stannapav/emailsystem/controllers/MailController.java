@@ -20,8 +20,8 @@ public class MailController {
     @PostMapping("/send/{userId}")
     public ResponseEntity<Void> sendMailToUser(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
-        mailService.sendUserMail(user);
+        mailService.sendUserMailAsync(user);
 
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.accepted().build();
     }
 }
