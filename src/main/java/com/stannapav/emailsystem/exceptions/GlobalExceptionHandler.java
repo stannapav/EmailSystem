@@ -13,6 +13,12 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MailSendingException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public @ResponseBody ErrorResponse  handleMailSendingException(MailSendingException ex) {
+        return new ErrorResponse(HttpStatus.SERVICE_UNAVAILABLE.value(), ex.getMessage());
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody ErrorResponse  handleEntityNotFoundException(EntityNotFoundException ex) {
