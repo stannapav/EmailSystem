@@ -23,7 +23,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-/// GET
     public User getUserById(Integer userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -44,7 +43,6 @@ public class UserService {
         return userRepository.findAllByOrderByCreatedOnDesc(pageable);
     }
 
-/// CREATE || POST
     public User createUser(UserDTO userDTO){
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("This email is already being used");
@@ -56,7 +54,6 @@ public class UserService {
         return user;
     }
 
-/// UPDATE || PUT
     public User updateUser(Integer id, UserDTO userDTO){
         User updateUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -75,11 +72,9 @@ public class UserService {
         }
 
         userRepository.save(updateUser);
-
         return updateUser;
     }
 
-/// DELETE
     public void deleteUser(Integer id){
         User deleteUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
