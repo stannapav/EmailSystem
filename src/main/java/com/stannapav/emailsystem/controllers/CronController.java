@@ -4,6 +4,7 @@ import com.stannapav.emailsystem.db.dtos.CronDTO;
 import com.stannapav.emailsystem.db.entities.CronJob;
 import com.stannapav.emailsystem.db.services.CronService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -29,25 +30,25 @@ public class CronController {
 
     @PutMapping("/{cronId}")
     public ResponseEntity<CronJob> updateCronJob(
-            @PathVariable Integer cronId,
+            @PathVariable @Min(1) Integer cronId,
             @Valid @RequestBody CronDTO cronDTO) {
         return ResponseEntity.ok(cronService.updateCronJob(cronId, cronDTO));
     }
 
     @GetMapping("/{cronId}")
-    public ResponseEntity<CronJob> getCronJobById(@PathVariable Integer cronId) {
+    public ResponseEntity<CronJob> getCronJobById(@PathVariable @Min(1) Integer cronId) {
         return ResponseEntity.ok(cronService.getCronJobById(cronId));
     }
 
     @GetMapping
     public Page<CronJob> getCronJobs(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(0) int size) {
         return cronService.getAllCronJobsPageable(page, size);
     }
 
     @DeleteMapping("/{cronId}")
-    public ResponseEntity<Void> deleteCronJob(@PathVariable Integer cronId) {
+    public ResponseEntity<Void> deleteCronJob(@PathVariable @Min(1) Integer cronId) {
         cronService.deleteCronJob(cronId);
         return ResponseEntity.noContent().build();
     }

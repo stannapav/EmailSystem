@@ -4,6 +4,7 @@ import com.stannapav.emailsystem.db.dtos.ResponseUserDTO;
 import com.stannapav.emailsystem.db.dtos.UserDTO;
 import com.stannapav.emailsystem.db.services.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,8 +31,8 @@ public class UserController {
 
     @GetMapping
     public Page<ResponseUserDTO> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size ) {
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(0) int size ) {
         return userService.getUsersPageable(page, size);
     }
 
@@ -47,13 +48,13 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<ResponseUserDTO> updateUser(
-            @PathVariable Integer userId,
+            @PathVariable @Min(1) Integer userId,
             @Valid @RequestBody UserDTO userDTO ) {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer userId){
+    public ResponseEntity<Void> deleteUser(@PathVariable @Min(1) Integer userId){
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
