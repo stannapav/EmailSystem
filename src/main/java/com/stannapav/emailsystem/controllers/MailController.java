@@ -1,6 +1,7 @@
 package com.stannapav.emailsystem.controllers;
 
 import com.stannapav.emailsystem.db.entities.User;
+import com.stannapav.emailsystem.db.enums.LogType;
 import com.stannapav.emailsystem.db.services.MailService;
 import com.stannapav.emailsystem.db.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class MailController {
     @PostMapping("/send/{userId}")
     public ResponseEntity<Void> sendMailToUser(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
-        mailService.sendUserMailAsync(user);
+        mailService.sendUserMailAsync(user, LogType.REST);
 
         return ResponseEntity.accepted().build();
     }

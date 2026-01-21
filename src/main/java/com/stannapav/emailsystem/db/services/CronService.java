@@ -2,6 +2,7 @@ package com.stannapav.emailsystem.db.services;
 
 import com.stannapav.emailsystem.db.dtos.CronDTO;
 import com.stannapav.emailsystem.db.entities.CronJob;
+import com.stannapav.emailsystem.db.enums.LogType;
 import com.stannapav.emailsystem.db.repositories.CronRepository;
 import com.stannapav.emailsystem.db.repositories.UserRepository;
 import com.stannapav.emailsystem.validation.CronValidator;
@@ -42,7 +43,8 @@ public class CronService {
 
     public void schedule(CronJob cronJob) {
         ScheduledFuture<?> future = scheduler.schedule(() -> {
-            userRepository.findAll().forEach(mailService::sendUserMailAsync);
+            userRepository.findAll()
+                    .forEach(user -> mailService.sendUserMailAsync(user, LogType.CRON));
         }, new CronTrigger(cronJob.getExpression()));
 
         cronJobs.put(cronJob.getId(), future);
