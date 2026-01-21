@@ -1,7 +1,7 @@
 package com.stannapav.emailsystem.controllers;
 
+import com.stannapav.emailsystem.db.dtos.ResponseUserDTO;
 import com.stannapav.emailsystem.db.dtos.UserDTO;
-import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -19,25 +19,25 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/username")
-    public ResponseEntity<User> getUserByUsername(@RequestParam @NotBlank String username) {
+    public ResponseEntity<ResponseUserDTO> getUserByUsername(@RequestParam @NotBlank String username) {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
     @GetMapping("/email")
-    public ResponseEntity<User> getUserByEmail(@RequestParam @NotBlank String email) {
+    public ResponseEntity<ResponseUserDTO> getUserByEmail(@RequestParam @NotBlank String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
     @GetMapping
-    public Page<User> getUsers(
+    public Page<ResponseUserDTO> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size ) {
         return userService.getUsersPageable(page, size);
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
-        User createdUser = userService.createUser(userDTO);
+    public ResponseEntity<ResponseUserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+        ResponseUserDTO createdUser = userService.createUser(userDTO);
         URI location = URI.create("/api/users/" + createdUser.getId());
 
         return ResponseEntity
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<ResponseUserDTO> updateUser(
             @PathVariable Integer userId,
             @Valid @RequestBody UserDTO userDTO ) {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));

@@ -1,5 +1,6 @@
 package com.stannapav.emailsystem.db.services;
 
+import com.stannapav.emailsystem.db.dtos.ResponseUserDTO;
 import com.stannapav.emailsystem.db.dtos.UserDTO;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.repositories.UserRepository;
@@ -28,22 +29,28 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public User getUserByUsername(String username){
-        return userRepository.findByUsername(username)
+    public ResponseUserDTO getUserByUsername(String username){
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return mapper.map(user, ResponseUserDTO.class);
     }
 
-    public User getUserByEmail(String email){
-        return userRepository.findByEmail(email)
+    public ResponseUserDTO getUserByEmail(String email){
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return mapper.map(user, ResponseUserDTO.class);
     }
 
-    public Page<User> getUsersPageable(int page, int size){
+    public Page<ResponseUserDTO> getUsersPageable(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAllByOrderByCreatedOnDesc(pageable);
+        Page<User> userPage = userRepository.findAllByOrderByCreatedOnDesc(pageable);
+
+        return userPage.map(user -> mapper.map(user, ResponseUserDTO.class));
     }
 
-    public User createUser(UserDTO userDTO){
+    public ResponseUserDTO createUser(UserDTO userDTO){
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("This email is already being used");
         }
@@ -51,10 +58,10 @@ public class UserService {
         User user = mapper.map(userDTO, User.class);
         userRepository.save(user);
 
-        return user;
+        return mapper.map(user, ResponseUserDTO.class);
     }
 
-    public User updateUser(Integer id, UserDTO userDTO){
+    public ResponseUserDTO updateUser(Integer id, UserDTO userDTO){
         User updateUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -72,7 +79,7 @@ public class UserService {
         }
 
         userRepository.save(updateUser);
-        return updateUser;
+        return mapper.map(updateUser, ResponseUserDTO.class);
     }
 
     public void deleteUser(Integer id){
