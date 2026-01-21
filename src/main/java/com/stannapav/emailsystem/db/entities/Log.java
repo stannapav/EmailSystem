@@ -24,6 +24,7 @@ public class Log {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
     private LogType type;
 
     @Column(nullable = false)
