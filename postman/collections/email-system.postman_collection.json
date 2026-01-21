@@ -1,0 +1,449 @@
+{
+  "info": {
+    "_postman_id": "82153764-0219-425e-9058-65d0bed60a5b",
+    "name": "email-system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "addUser",
+          "id": "743b5055-9a3b-4437-9d04-d6084fb471f7",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\" : \"Anna\",\n    \"email\" : \"stannapav@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/addUser",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "addUser"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllUsers",
+          "id": "85e7f981-49a8-4007-b184-4003e3c42213",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\" : \"Anna\",\n    \"email\" : \"stannapav@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users?page=0&size=20",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUserByUsername",
+          "id": "cc7bbe68-f3b5-4c29-bc06-a0161c8f818c",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\" : \"Anna\",\n    \"email\" : \"stannapav@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/username?username=Anna",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "username"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "Anna"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUserByEmail",
+          "id": "6592bb55-a345-4a7c-9cae-89852fa59742",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\" : \"Anna\",\n    \"email\" : \"stannapav@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/email?email=stannapav@gmail.com",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "email"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "stannapav@gmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateUser",
+          "id": "c1f08ef9-d84b-47f5-92b9-7c4198012b17",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\" : \"Cat\",\n    \"email\" : \"stannapav@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteUser",
+          "id": "4407ad16-25fc-4230-99a6-de3fc8665780",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/users/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteAllUsers",
+          "id": "041d00bc-c731-4fb2-9744-114f34763e75",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/users",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "f2231d39-316f-44ca-8f3f-806de01f28ab"
+    },
+    {
+      "name": "CronJob",
+      "item": [
+        {
+          "name": "addCronJob",
+          "id": "6d17fca0-d14b-4149-813b-d62b6f544ec4",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"expression\" : \"0 */2 * * * ?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs/addCronJob",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs",
+                "addCronJob"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateCronJob",
+          "id": "3fc54090-b21c-457f-aedc-ecc444aac491",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"expression\": \"0 */3 * * * ?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteCronJob",
+          "id": "c4c99f3c-7f4b-446e-a3f0-3e17f5bfea4b",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getCronJob",
+          "id": "af339565-a5d7-4a43-9600-cb44acb2c3cf",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllCronJobs",
+          "id": "6bd2722d-0982-4769-857b-a705ce0e3ed5",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteAllCronJobs",
+          "id": "555b9628-6561-44f9-9b30-f7b71cabd6f6",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cron-jobs",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cron-jobs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "51ff8d25-efc7-41aa-8145-4522f2d1895a"
+    },
+    {
+      "name": "sendMailToUser",
+      "id": "2305e254-96a8-4862-ac8e-6b078c048012",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/mails/send/1",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "mails",
+            "send",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getStats",
+      "id": "7f52606c-0e94-4ad2-9381-ec8aa5c34c3d",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/logs?page=0&size=20",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "logs"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "9c3c5186-1aa0-4705-9590-5b68c91f4e82",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "58a1cb52-048f-410c-b46c-a71381e31b58",
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "1fd4b029-b0de-4a88-b17e-6969571aaccc",
+      "key": "baseURL",
+      "value": ""
+    }
+  ]
+}
