@@ -1,15 +1,12 @@
 package com.stannapav.emailsystem.db.services;
 
+import com.stannapav.emailsystem.db.dtos.PageResponse;
 import com.stannapav.emailsystem.db.dtos.UserStatDTO;
 import com.stannapav.emailsystem.db.entities.Log;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.enums.LogType;
 import com.stannapav.emailsystem.db.repositories.LogRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,8 +29,7 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public Page<UserStatDTO> getUserStats(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public PageResponse<UserStatDTO> getUserStats(int page, int size) {
         List<Log> logs = logRepository.findAll();
         Map<User, List<Log>> logsByUser = logs.stream()
                 .collect(Collectors.groupingBy(Log::getUser));
@@ -55,6 +51,12 @@ public class LogService {
 
         userStats.sort(Comparator.comparingLong(s -> -(s.getRestCount() + s.getCronCount())));
 
-        return new PageImpl<>(userStats, pageable, userStats.size());
+        int totalPages = (int) Math.ceil((double) userStats.size() / size);
+        return new PageResponse<>(
+                userStats,
+                page,
+                size,
+                userStats.size(),
+                totalPages);
     }
 }
