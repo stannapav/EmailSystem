@@ -1,5 +1,6 @@
 package com.stannapav.emailsystem.db.entities;
 
+import com.stannapav.emailsystem.db.enums.LogType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,25 +8,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "logs")
+public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private String username;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    private LogType type;
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
@@ -34,7 +33,4 @@ public class User {
     protected void onCreate() {
         this.createdOn = LocalDateTime.now();
     }
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Log> logs = new ArrayList<>();
 }
