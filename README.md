@@ -15,7 +15,7 @@ clone my project and then your IDE will do it's magic because there's already ev
 ## Tech Stack
 
 
-**Used:** Java 21, Maven, Spring Boot, H2 database, Gmail SMTP server, Swagger, Lombok, Validation, cron-utils, modelmapper, Mockito
+**Used:** Java 17, Maven, Spring Boot, H2 database, Gmail SMTP server, Swagger, Lombok, Validation, cron-utils, modelmapper, Mockito, JUnit
 
 
 ## Also
