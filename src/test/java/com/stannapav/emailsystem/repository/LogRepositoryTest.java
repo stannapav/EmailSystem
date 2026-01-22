@@ -60,11 +60,8 @@ public class LogRepositoryTest {
         Log savedLog2 = logRepository.save(log2);
 
         List<Log> logs = logRepository.findAll();
-        List<Log> actual = new ArrayList<>();
-        actual.add(savedLog1);
-        actual.add(savedLog2);
 
         Assertions.assertThat(logs).isNotNull();
-        Assertions.assertThat(logs).isEqualTo(actual);
+        Assertions.assertThat(logs).isEqualTo(List.of(savedLog1, savedLog2));
     }
 }
