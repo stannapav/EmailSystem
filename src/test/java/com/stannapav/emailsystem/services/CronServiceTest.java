@@ -71,12 +71,12 @@ public class CronServiceTest {
         CronDTO cronDTO = new CronDTO();
         cronDTO.setExpression(expression);
 
-        doThrow(new IllegalArgumentException("Invalid cron expression: " + expression))
+        doThrow(new IllegalArgumentException("Invalid cron expression"))
                 .when(cronValidator).validate(expression);
 
         Assertions.assertThatThrownBy(() -> cronService.createCronJob(cronDTO))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid cron expression: " + expression);
+                .hasMessage("Invalid cron expression");
 
         verify(cronRepository, never()).save(any());
         verify(scheduler, never()).schedule(any(Runnable.class), any(CronTrigger.class));
@@ -116,12 +116,12 @@ public class CronServiceTest {
         CronDTO cronDTO = new CronDTO();
         cronDTO.setExpression(expression);
 
-        doThrow(new IllegalArgumentException("Invalid cron expression: " + expression))
+        doThrow(new IllegalArgumentException("Invalid cron expression"))
                 .when(cronValidator).validate(expression);
 
         Assertions.assertThatThrownBy(() -> cronService.updateCronJob(1, cronDTO))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid cron expression: " + expression);
+                .hasMessage("Invalid cron expression");
 
         verify(cronRepository, never()).save(any());
         verify(scheduledFuture, never()).cancel(true);

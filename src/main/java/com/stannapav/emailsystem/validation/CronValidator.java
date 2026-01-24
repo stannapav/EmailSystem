@@ -19,7 +19,7 @@ public class CronValidator {
         try {
             cronParser.parse(expression).validate();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid cron expression: " + expression);
+            throw new IllegalArgumentException("Invalid cron expression");
         }
     }
 }
