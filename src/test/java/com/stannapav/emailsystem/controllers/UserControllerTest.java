@@ -140,7 +140,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void deleteUser_ok() throws Exception {
+    void UserController_DeleteUserById_ReturnNoContent() throws Exception {
         doNothing().when(userService).deleteUser(1);
 
         mockMvc.perform(delete("/api/users/1"))
@@ -148,5 +148,4 @@ public class UserControllerTest {
 
         verify(userService).deleteUser(1);
     }
-
 }
