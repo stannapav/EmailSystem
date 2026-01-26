@@ -15,8 +15,6 @@ clone my project
 
 ```bash
 git clone https://github.com/stannapav/EmailSystem.git
-cd EmailSystem
-docker compose up -d --build
 ```
 
 transport yourself in EmailSystem directory 
