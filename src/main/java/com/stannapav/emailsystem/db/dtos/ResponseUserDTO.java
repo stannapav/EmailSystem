@@ -1,5 +1,6 @@
 package com.stannapav.emailsystem.db.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -19,5 +20,6 @@ public class ResponseUserDTO {
     @Email(message = "Invalid email format")
     private String email;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
 }
