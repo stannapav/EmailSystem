@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface LogRepository extends JpaRepository<Log, Integer> {
 
     @Query("""
-        SELECT 
+        SELECT
             u.username as username,
             u.email as email,
             SUM(CASE WHEN l.type = 'REST' THEN 1 ELSE 0 END) as rest,
