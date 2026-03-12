@@ -1,6 +1,7 @@
 package com.stannapav.emailsystem.services;
 
 import com.stannapav.emailsystem.db.dtos.CronDTO;
+import com.stannapav.emailsystem.db.dtos.ResponseCronDTO;
 import com.stannapav.emailsystem.db.entities.CronJob;
 import com.stannapav.emailsystem.db.repositories.CronRepository;
 import com.stannapav.emailsystem.db.services.CronService;
@@ -42,19 +43,33 @@ public class CronServiceTest {
     private CronService cronService;
 
     @Test
-    public void CronService_CreateCronJob_ReturnCronJob() {
+    public void CronService_CreateCronJob_ReturnResponseCronDTO() {
         CronDTO cronDTO = new CronDTO();
         cronDTO.setExpression("0 2 * * * *");
 
         CronJob cronJob = new CronJob();
         cronJob.setExpression(cronDTO.getExpression());
 
+        ResponseCronDTO responseCron = new ResponseCronDTO();
+        responseCron.setId(1);
+        responseCron.setExpression(cronDTO.getExpression());
+
         when(mapper.map(cronDTO, CronJob.class)).thenReturn(cronJob);
+
+        when(cronRepository.save(any(CronJob.class))).thenAnswer(invocation -> {
+            CronJob saved = invocation.getArgument(0);
+            saved.setId(1);
+            return saved;
+        });
+
         doReturn(scheduledFuture)
                 .when(scheduler)
                 .schedule(any(Runnable.class), any(CronTrigger.class));
 
-        CronJob createdCron = cronService.createCronJob(cronDTO);
+        when(mapper.map(any(CronJob.class), eq(ResponseCronDTO.class)))
+                .thenReturn(responseCron);
+
+        ResponseCronDTO createdCron = cronService.createCronJob(cronDTO);
 
         Assertions.assertThat(createdCron).isNotNull();
         Assertions.assertThat(createdCron.getExpression()).isEqualTo(cronDTO.getExpression());
@@ -83,7 +98,7 @@ public class CronServiceTest {
     }
 
     @Test
-    public void CronService_UpdateCronJob_ReturnCronJob() {
+    public void CronService_UpdateCronJob_ReturnResponseCronDTO() {
         Integer id = 1;
 
         CronDTO cronDTO = new CronDTO();
@@ -92,13 +107,18 @@ public class CronServiceTest {
         CronJob existingCron = new CronJob();
         existingCron.setId(id);
 
+        ResponseCronDTO responseCron = new ResponseCronDTO();
+        responseCron.setId(id);
+        responseCron.setExpression(cronDTO.getExpression());
+
         when(cronRepository.findById(id)).thenReturn(Optional.of(existingCron));
         when(cronRepository.findByExpression(cronDTO.getExpression())).thenReturn(Optional.empty());
         doReturn(scheduledFuture)
                 .when(scheduler)
                 .schedule(any(Runnable.class), any(CronTrigger.class));
+        when(mapper.map(existingCron, ResponseCronDTO.class)).thenReturn(responseCron);
 
-        CronJob updatedCron = cronService.updateCronJob(id, cronDTO);
+        ResponseCronDTO updatedCron = cronService.updateCronJob(id, cronDTO);
 
         Assertions.assertThat(updatedCron).isNotNull();
         Assertions.assertThat(updatedCron.getExpression()).isEqualTo(cronDTO.getExpression());
@@ -200,15 +220,19 @@ public class CronServiceTest {
     }
 
     @Test
-    public void CronService_GetCronJobById_ReturnCronJob() {
+    public void CronService_GetCronJobById_ReturnResponseCronDTO() {
         Integer id = 1;
 
         CronJob existCron = new CronJob();
         existCron.setId(id);
 
-        when(cronRepository.findById(id)).thenReturn(Optional.of(existCron));
+        ResponseCronDTO responseCron = new ResponseCronDTO();
+        responseCron.setId(id);
 
-        CronJob cronJob = cronService.getCronJobById(id);
+        when(cronRepository.findById(id)).thenReturn(Optional.of(existCron));
+        when(mapper.map(existCron, ResponseCronDTO.class)).thenReturn(responseCron);
+
+        ResponseCronDTO cronJob = cronService.getCronJobById(id);
 
         Assertions.assertThat(cronJob).isNotNull();
         Assertions.assertThat(cronJob.getId()).isEqualTo(id);

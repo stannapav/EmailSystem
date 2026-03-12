@@ -2,9 +2,7 @@ package com.stannapav.emailsystem.services;
 
 import com.stannapav.emailsystem.db.dtos.PageResponse;
 import com.stannapav.emailsystem.db.dtos.UserStatDTO;
-import com.stannapav.emailsystem.db.entities.Log;
-import com.stannapav.emailsystem.db.entities.User;
-import com.stannapav.emailsystem.db.enums.LogType;
+import com.stannapav.emailsystem.db.dtos.UserStatProjection;
 import com.stannapav.emailsystem.db.repositories.LogRepository;
 import com.stannapav.emailsystem.db.services.LogService;
 import org.assertj.core.api.Assertions;
@@ -13,13 +11,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LogServiceTest {
@@ -31,36 +32,41 @@ public class LogServiceTest {
 
     @Test
     public void LogService_GetUserStat_ReturnResponsePage() {
-        User user1 = new User();
-        user1.setId(1);
+        LocalDateTime now = LocalDateTime.now();
 
-        User user2 = new User();
-        user2.setId(2);
+        UserStatProjection projection1 = mock(UserStatProjection.class);
+        when(projection1.getUsername()).thenReturn("user1");
+        when(projection1.getEmail()).thenReturn("user1@test.com");
+        when(projection1.getRest()).thenReturn(0L);
+        when(projection1.getCron()).thenReturn(1L);
+        when(projection1.getFirst()).thenReturn(now);
+        when(projection1.getLast()).thenReturn(now);
 
-        Log log1 = new Log();
-        log1.setUser(user1);
-        log1.setType(LogType.CRON);
-        log1.setCreatedOn(LocalDateTime.now());
+        UserStatProjection projection2 = mock(UserStatProjection.class);
+        when(projection2.getUsername()).thenReturn("user2");
+        when(projection2.getEmail()).thenReturn("user2@test.com");
+        when(projection2.getRest()).thenReturn(1L);
+        when(projection2.getCron()).thenReturn(0L);
+        when(projection2.getFirst()).thenReturn(now);
+        when(projection2.getLast()).thenReturn(now);
 
-        Log log2 = new Log();
-        log2.setUser(user2);
-        log2.setType(LogType.REST);
-        log2.setCreatedOn(LocalDateTime.now());
+        Page<UserStatProjection> statsPage = new PageImpl<>(
+                List.of(projection1, projection2),
+                PageRequest.of(0,2),
+                2
+        );
 
-        List<Log> logs = List.of(log1, log2);
+        when(logRepository.getUserStats(any(Pageable.class)))
+                .thenReturn(statsPage);
 
-        List<UserStatDTO> userStats = new ArrayList<>();
-        userStats.add(new UserStatDTO(null, null, 0, 1, log1.getCreatedOn(), log1.getCreatedOn()));
-        userStats.add(new UserStatDTO(null, null, 1, 0, log2.getCreatedOn(), log2.getCreatedOn()));
-
-        when(logRepository.findAll()).thenReturn(logs);
-
-        PageResponse<UserStatDTO> response = logService.getUserStats(0, 2);
+        PageResponse<UserStatDTO> response = logService.getUserStats(0,2);
 
         Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response.getContent().get(0).getCronCount()).isEqualTo(userStats.get(0).getCronCount());
-        Assertions.assertThat(response.getContent().get(1).getRestCount()).isEqualTo(userStats.get(1).getRestCount());
+        Assertions.assertThat(response.getContent()).hasSize(2);
 
-        verify(logRepository).findAll();
+        Assertions.assertThat(response.getContent().get(0).getCount().getCron()).isEqualTo(1);
+        Assertions.assertThat(response.getContent().get(1).getCount().getRest()).isEqualTo(1);
+
+        verify(logRepository).getUserStats(any(Pageable.class));
     }
 }

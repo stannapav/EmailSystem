@@ -1,7 +1,7 @@
 package com.stannapav.emailsystem.controllers;
 
 import com.stannapav.emailsystem.db.dtos.CronDTO;
-import com.stannapav.emailsystem.db.entities.CronJob;
+import com.stannapav.emailsystem.db.dtos.ResponseCronDTO;
 import com.stannapav.emailsystem.db.services.CronService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,15 +41,15 @@ public class CronControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private CronJob cronJob;
+    private ResponseCronDTO responseCron;
 
     private CronDTO cronDTO;
 
     @BeforeEach
     public void init() {
-        cronJob = new CronJob();
-        cronJob.setId(1);
-        cronJob.setExpression("0 2 * * * *");
+        responseCron = new ResponseCronDTO();
+        responseCron.setId(1);
+        responseCron.setExpression("0 2 * * * *");
 
         cronDTO = new CronDTO();
         cronDTO.setExpression("0 2 * * * *");
@@ -57,7 +57,7 @@ public class CronControllerTest {
 
     @Test
     public void CronController_CreateCron_ReturnCreated() throws Exception {
-        when(cronService.createCronJob(any(CronDTO.class))).thenReturn(cronJob);
+        when(cronService.createCronJob(any(CronDTO.class))).thenReturn(responseCron);
 
         ResultActions response = mockMvc.perform(post("/api/cron-jobs/addCronJob")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ public class CronControllerTest {
 
     @Test
     public void CronController_UpdateCron_ReturnOk() throws Exception {
-        when(cronService.updateCronJob(eq(1),any(CronDTO.class))).thenReturn(cronJob);
+        when(cronService.updateCronJob(eq(1),any(CronDTO.class))).thenReturn(responseCron);
 
         ResultActions response = mockMvc.perform(put("/api/cron-jobs/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ public class CronControllerTest {
 
     @Test
     public void CronController_GetCronById_ReturnOk() throws Exception {
-        when(cronService.getCronJobById(any(Integer.class))).thenReturn(cronJob);
+        when(cronService.getCronJobById(any(Integer.class))).thenReturn(responseCron);
 
         ResultActions response = mockMvc.perform(get("/api/cron-jobs/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,8 +93,8 @@ public class CronControllerTest {
 
     @Test
     void CronController_GetAllCronJobs_ReturnOk() throws Exception {
-        Page<CronJob> page =
-                new PageImpl<>(List.of(cronJob), PageRequest.of(0, 20), 1);
+        Page<ResponseCronDTO> page =
+                new PageImpl<>(List.of(responseCron), PageRequest.of(0, 20), 1);
 
         when(cronService.getAllCronJobsPageable(0, 20)).thenReturn(page);
 
@@ -103,7 +103,7 @@ public class CronControllerTest {
                 .param("size", "20"));
 
         response.andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].expression").value(cronJob.getExpression()));
+                .andExpect(jsonPath("$.content[0].expression").value(responseCron.getExpression()));
     }
 
     @Test
