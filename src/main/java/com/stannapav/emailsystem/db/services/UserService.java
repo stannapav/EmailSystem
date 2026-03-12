@@ -7,7 +7,6 @@ import com.stannapav.emailsystem.db.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +17,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private ModelMapper mapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final ModelMapper mapper;
+    private final UserRepository userRepository;
 
     public User getUserById(Integer userId){
         return userRepository.findById(userId)
