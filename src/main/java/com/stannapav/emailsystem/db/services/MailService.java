@@ -9,11 +9,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
+
 @Service
 @RequiredArgsConstructor
 public class MailService {
     private final JavaMailSender mailSender;
     private final LogService logService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Async("mailExecutor")
     public void sendUserMailAsync(User user, LogType logType) {
@@ -23,7 +26,7 @@ public class MailService {
             message.setSubject("Вітання!");
             message.setText(
                     "Ім'я користувача: " + user.getUsername() + "\n" +
-                            "Дата та час створення: " + user.getCreatedOn()
+                            "Дата та час створення: " + user.getCreatedOn().format(formatter)
             );
 
             mailSender.send(message);
