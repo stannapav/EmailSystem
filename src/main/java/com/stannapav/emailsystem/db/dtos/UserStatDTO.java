@@ -1,5 +1,6 @@
 package com.stannapav.emailsystem.db.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,11 @@ import java.time.LocalDateTime;
 public class UserStatDTO {
     private String username;
     private String email;
+    private CountDTO count;
 
-    private long restCount;
-    private long cronCount;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime first;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private  LocalDateTime last;
 }
