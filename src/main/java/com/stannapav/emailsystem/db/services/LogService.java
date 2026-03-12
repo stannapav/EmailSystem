@@ -1,20 +1,20 @@
 package com.stannapav.emailsystem.db.services;
 
+import com.stannapav.emailsystem.db.dtos.CountDTO;
 import com.stannapav.emailsystem.db.dtos.PageResponse;
 import com.stannapav.emailsystem.db.dtos.UserStatDTO;
+import com.stannapav.emailsystem.db.dtos.UserStatProjection;
 import com.stannapav.emailsystem.db.entities.Log;
 import com.stannapav.emailsystem.db.entities.User;
 import com.stannapav.emailsystem.db.enums.LogType;
 import com.stannapav.emailsystem.db.repositories.LogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,33 +30,27 @@ public class LogService {
     }
 
     public PageResponse<UserStatDTO> getUserStats(int page, int size) {
-        List<Log> logs = logRepository.findAll();
-        Map<User, List<Log>> logsByUser = logs.stream()
-                .collect(Collectors.groupingBy(Log::getUser));
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<UserStatDTO> userStats = new ArrayList<>();
+        Page<UserStatProjection> statsPage = logRepository.getUserStats(pageable);
 
-        for (Map.Entry<User, List<Log>> entry : logsByUser.entrySet()) {
-            User user = entry.getKey();
-            List<Log> userLogs = entry.getValue();
+        List<UserStatDTO> content = statsPage.getContent()
+                .stream()
+                .map(p -> new UserStatDTO(
+                        p.getUsername(),
+                        p.getEmail(),
+                        new CountDTO(p.getRest(), p.getCron()),
+                        p.getFirst(),
+                        p.getLast()
+                ))
+                .toList();
 
-            long restCount = userLogs.stream().filter(log -> log.getType() == LogType.REST).count();
-            long cronCount = userLogs.stream().filter(log -> log.getType() == LogType.CRON).count();
-            LocalDateTime first = userLogs.stream().map(Log::getCreatedOn).min(LocalDateTime::compareTo).orElse(null);
-            LocalDateTime last = userLogs.stream().map(Log::getCreatedOn).max(LocalDateTime::compareTo).orElse(null);
-
-            UserStatDTO userStat = new UserStatDTO(user.getUsername(), user.getEmail(), restCount, cronCount, first, last);
-            userStats.add(userStat);
-        }
-
-        userStats.sort(Comparator.comparingLong(s -> -(s.getRestCount() + s.getCronCount())));
-
-        int totalPages = (int) Math.ceil((double) userStats.size() / size);
         return new PageResponse<>(
-                userStats,
-                page,
-                size,
-                userStats.size(),
-                totalPages);
+                content,
+                statsPage.getNumber(),
+                statsPage.getSize(),
+                statsPage.getTotalElements(),
+                statsPage.getTotalPages()
+        );
     }
 }
