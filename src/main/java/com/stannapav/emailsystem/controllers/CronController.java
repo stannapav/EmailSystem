@@ -1,6 +1,7 @@
 package com.stannapav.emailsystem.controllers;
 
 import com.stannapav.emailsystem.db.dtos.CronDTO;
+import com.stannapav.emailsystem.db.dtos.ResponseCronDTO;
 import com.stannapav.emailsystem.db.entities.CronJob;
 import com.stannapav.emailsystem.db.services.CronService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,8 +34,8 @@ public class CronController {
                     content = @Content(schema = @Schema()))
     })
     @PostMapping("/addCronJob")
-    public ResponseEntity<CronJob> createCronJob(@Valid @RequestBody CronDTO cronDTO) {
-        CronJob cronJob = cronService.createCronJob(cronDTO);
+    public ResponseEntity<ResponseCronDTO> createCronJob(@Valid @RequestBody CronDTO cronDTO) {
+        ResponseCronDTO cronJob = cronService.createCronJob(cronDTO);
         URI location = URI.create("/api/cron-jobs/" + cronJob.getId());
 
         return ResponseEntity
@@ -52,7 +53,7 @@ public class CronController {
                     content = @Content(schema = @Schema()))
     })
     @PutMapping("/{cronId}")
-    public ResponseEntity<CronJob> updateCronJob(
+    public ResponseEntity<ResponseCronDTO> updateCronJob(
             @PathVariable @Min(1) Integer cronId,
             @Valid @RequestBody CronDTO cronDTO) {
         return ResponseEntity.ok(cronService.updateCronJob(cronId, cronDTO));
@@ -68,7 +69,7 @@ public class CronController {
                     content = @Content(schema = @Schema()))
     })
     @GetMapping("/{cronId}")
-    public ResponseEntity<CronJob> getCronJobById(@PathVariable @Min(1) Integer cronId) {
+    public ResponseEntity<ResponseCronDTO> getCronJobById(@PathVariable @Min(1) Integer cronId) {
         return ResponseEntity.ok(cronService.getCronJobById(cronId));
     }
 
@@ -80,7 +81,7 @@ public class CronController {
                     content = @Content(schema = @Schema()))
     })
     @GetMapping
-    public Page<CronJob> getCronJobs(
+    public Page<ResponseCronDTO> getCronJobs(
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(0) int size) {
         return cronService.getAllCronJobsPageable(page, size);
